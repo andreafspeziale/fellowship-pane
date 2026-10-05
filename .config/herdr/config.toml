@@ -1,0 +1,19 @@
+# Personal setup: these are my Herdr UI preferences and Pi team shortcut.
+# Keep them as an example or merge the parts you want into your own config.
+# If you change the plugin ID or action ID, update the command accordingly.
+onboarding = false
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+[ui]
+agent_panel_sort = "priority"
+show_agent_labels_on_pane_borders = true
+pane_scrollbars = false
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "plugin_action"
+command = "local.pi-team.setup"
+description = "bootstrap local Pi team"

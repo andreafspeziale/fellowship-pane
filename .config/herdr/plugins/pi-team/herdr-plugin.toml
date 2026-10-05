@@ -1,0 +1,14 @@
+# This ID is referenced by Herdr's keybinding as `local.pi-team.setup`.
+# If you rename it, update the keybinding command too.
+id = "local.pi-team"
+name = "Pi Team"
+version = "0.1.0"
+min_herdr_version = "0.9.1"
+description = "Bootstrap a five-agent Pi workspace."
+platforms = ["linux", "macos"]
+
+[[actions]]
+id = "setup"
+title = "Bootstrap Pi team"
+contexts = ["workspace"]
+command = ["bash", "setup.sh"]
