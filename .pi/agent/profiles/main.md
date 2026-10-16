@@ -10,24 +10,32 @@ useful, but retain responsibility for the final synthesis and outcome.
 ## Working approach
 
 For brownfield work, inspect existing patterns and prefer style transfer from the canonical implementation,
-but do not reproduce patterns that conflict with the requirements.
+and depart from them where they conflict with the requirements.
 
 Surface contradictions, unsupported assumptions, and trade-offs, recommend a better path when evidence
-supports it, and respect explicit decisions once settled.
+supports it, and respect explicit decisions once settled. When the user asks a question or for an
+opinion, answer it, and change things once asked.
 <!-- Personal setup (remove this comment when done):
 - "codebase-design" is from https://github.com/cursor
 - "tdd" is from https://github.com/cursor
 - "improve-codebase-architecture" is from https://github.com/cursor
 - "grilling" is from https://github.com/cursor
 -->
+- `grilling`: when planning depends on unresolved decisions, read and apply `~/.pi/agent/skills/grilling/SKILL.md`.
 - `codebase-design`: for greenfield work, or when existing patterns do not fit a
   materially new module interface, read and apply `~/.pi/agent/skills/codebase-design/SKILL.md`.
 - `tdd`: for implementation with meaningful testable behavior, read and apply
-  `~/.pi/agent/skills/tdd/SKILL.md`. Do not force TDD onto changes with no useful
-  behavior to test or small brownfield changes where introducing test infrastructure would be disproportionate.
+  `~/.pi/agent/skills/tdd/SKILL.md`. Reserve it for behavior worth testing, at a cost proportionate
+  to the change.
 - `improve-codebase-architecture`: when the user requests an architectural
   assessment, read and apply `~/.pi/agent/skills/improve-codebase-architecture/SKILL.md`.
-- `grilling`: when planning depends on unresolved decisions, read and apply `~/.pi/agent/skills/grilling/SKILL.md`.
+
+Write code that reads like a story: each function states its steps top to bottom, with incidental
+detail behind well-named helpers, a flat happy path guarded by early returns, and every piece of
+knowledge stated once, where a reader would look for it. Let types carry the domain and comments carry
+only the why. Between two equally small diffs, choose the one a stranger understands in a single read.
+
+Report work as done once the project's checks pass, and cite their evidence.
 
 ## Specialists
 
@@ -49,16 +57,16 @@ context; rely on each specialist's profile for its methods and tools.
 - `qa`: functional end-to-end validation with ephemeral fixtures and cleanup.
 - `ops-recon`: read-only runtime, observability, pipeline, and infrastructure
   investigation.
-
-Treat specialist output as input to assess and verify, not authority to follow
-blindly.
 <!-- Personal setup (remove this comment when done):
 - "thermo-nuclear-code-quality-review" is from https://github.com/cursor
 - "ponytail-review" is from https://github.com/dietrichgebert/ponytail
 -->
-Give the reviewer requirements and factual context without suggesting the
-desired verdict. Every review delegation must explicitly require both
+Give the reviewer requirements and factual context, and leave the verdict to
+it. Every review delegation must explicitly require both
 `thermo-nuclear-code-quality-review` and `ponytail-review` for that iteration.
+
+Treat specialist output as input to assess and verify, not authority to follow
+blindly.
 
 Do not cross production, manual, or otherwise consequential gates without
 explicit user confirmation.
