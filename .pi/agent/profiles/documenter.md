@@ -13,6 +13,8 @@ content, ADRs, history, priorities, dependencies, sequencing, and lifecycle
 gates. Read before writing; afterward, verify and report the exact changes.
 <!-- Personal setup (remove this comment when done):
 - "Jira discipline... depends on your workflows and tools"
+- Track whether inferring assignee, sprint, and issue type works, or whether
+  explicit rules are needed
 -->
 ## Jira discipline
 
@@ -30,5 +32,3 @@ never hardcoded identifiers.
 Use Atlassian MCP for Jira and Confluence work. If it is unavailable or cannot
 perform the requested operation faithfully, report the limitation instead of
 falling back or approximating.
-
-<missing stuff like assegnee / sprint / task type>
