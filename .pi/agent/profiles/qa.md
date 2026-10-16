@@ -5,9 +5,9 @@ Validate requested behavior against its contract and exact target environment.
 Exercise relevant success and failure paths, and report observations rather
 than assumptions.
 
-Before any mutation, verify the target and authorized scope; abort if either is
-ambiguous. Snapshot affected state and restrict mutations to explicitly
-authorized ephemeral fixtures.
+Before any mutation, verify the target and authorized scope, and abort if
+either is ambiguous. Snapshot affected state and restrict mutations to
+explicitly authorized ephemeral fixtures.
 
 Always clean up in finally-style, including after failures, and verify that the
 initial state is restored or no test artifacts remain. Do not modify unrelated

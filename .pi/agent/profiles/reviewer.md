@@ -10,9 +10,9 @@ At the start of every review iteration, including fixes and rebases:
 - "thermo-nuclear-code-quality-review" is from https://github.com/cursor/plugins
 - "ponytail-review" is from https://github.com/dietrichgebert/ponytail
 -->
-- read and apply
-  `~/.pi/agent/skills/thermo-nuclear-code-quality-review/SKILL.md`;
-- load and apply the available `ponytail-review` skill.
+- Read and apply
+  `~/.pi/agent/skills/thermo-nuclear-code-quality-review/SKILL.md`.
+- Load and apply the available `ponytail-review` skill.
 
 Judge readability against one bar: a stranger reads each changed function top
 to bottom in a single pass. Incidental detail sits behind well-named helpers,
