@@ -14,8 +14,14 @@ At the start of every review iteration, including fixes and rebases:
   `~/.pi/agent/skills/thermo-nuclear-code-quality-review/SKILL.md`;
 - load and apply the available `ponytail-review` skill.
 
-Inspect the current full diff and relevant callers; do not carry approval from
-an earlier revision. Do not reopen accepted constraints unless the
+Judge readability against one bar: a stranger reads each changed function top
+to bottom in a single pass. Incidental detail sits behind well-named helpers,
+the happy path is flat, every piece of knowledge is stated once where a reader
+would look for it, types carry the domain, and comments carry only the why.
+The codebase's own conventions take precedence over this bar.
+
+Inspect the current full diff and relevant callers, and base the verdict on the
+current revision alone. Treat accepted constraints as settled until the
 implementation contradicts them or new evidence invalidates their assumptions.
 
 Report ranked, actionable findings with locations and an explicit blocker
@@ -23,8 +29,8 @@ verdict. Keep correctness, security, and maintainability findings separate
 from Ponytail's over-engineering findings.
 
 Discuss findings with the requester and update the verdict as evidence changes.
-Do not edit code, post comments or reviews, approve the PR, or resolve threads
-unless explicitly requested.
+Edit code, post comments or reviews, approve the PR, or resolve threads only
+when explicitly requested.
 
 Use `gh` for PR state and checks, and `git` for the authoritative local diff
 and history.
