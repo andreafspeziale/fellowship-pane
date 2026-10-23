@@ -293,7 +293,7 @@ export default function questionnaire(pi: ExtensionAPI) {
 						}
 					}
 
-					lines.push(theme.fg("accent", "─".repeat(renderWidth)));
+					lines.push(theme.fg("border", "─".repeat(renderWidth)));
 
 					// Tab bar (multi-question only)
 					if (isMulti) {
@@ -383,7 +383,7 @@ export default function questionnaire(pi: ExtensionAPI) {
 							: "↑↓ navigate • Enter select • Esc cancel";
 						addWrappedWithPrefix(" ", theme.fg("dim", help));
 					}
-					lines.push(theme.fg("accent", "─".repeat(renderWidth)));
+					lines.push(theme.fg("border", "─".repeat(renderWidth)));
 
 					cachedLines = lines;
 					return lines;
