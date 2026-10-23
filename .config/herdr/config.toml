@@ -12,6 +12,9 @@ agent_panel_sort = "priority"
 show_agent_labels_on_pane_borders = true
 pane_scrollbars = false
 
+[ui.sound]
+path = "sounds/bomb_panted.mp3"
+
 [[keys.command]]
 key = "prefix+shift+l"
 type = "plugin_action"
