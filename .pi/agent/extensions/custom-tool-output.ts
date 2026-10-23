@@ -14,7 +14,7 @@ import {
 	type ToolDefinition,
 	type ToolRenderResultOptions,
 } from "@earendil-works/pi-coding-agent";
-import { Container, Text } from "@earendil-works/pi-tui";
+import { Container, Text, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
 type TimingState = {
 	startedAt?: number;
@@ -43,9 +43,29 @@ export default function (pi: ExtensionAPI) {
 			if (!activeTools.has(tool.name)) continue;
 
 			const renderExpanded = tool.renderResult;
+			const renderFullCall = tool.renderCall;
+			const isShell = tool.name === "bash" || tool.name === "powershell";
 			pi.registerTool({
 				...tool,
 				...(tool.name === "edit" ? { renderCall: renderEditCall } : {}),
+				...(isShell && renderFullCall
+					? {
+							renderCall(args, theme, context) {
+								// Fresh component each time: the wrapper below can't be reused via lastComponent.
+								const full = renderFullCall(args, theme, { ...context, lastComponent: undefined });
+								if (context.expanded) return full;
+								return {
+									render(width: number) {
+										// Render unwrapped so line 0 is the command's real first line, then clip it to one row.
+										const [first = "", ...rest] = full.render(1000).map((line) => line.trimEnd());
+										if (!rest.length && visibleWidth(first) <= width) return [first];
+										return [truncateToWidth(first, Math.max(1, width - 2), "") + theme.fg("muted", " …")];
+									},
+									invalidate: () => full.invalidate(),
+								};
+							},
+						}
+					: {}),
 				renderResult(result, options, theme, context) {
 					if (tool.name === "edit") return renderEditResult(result, options, theme, context);
 
