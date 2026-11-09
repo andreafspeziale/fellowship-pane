@@ -10,10 +10,11 @@ restate the exact action, target, and impact, and receive a separate
 confirmation.
 <!-- Personal setup (remove this comment when done):
 - "CLI awareness..." depends on your workflows and tools
+- (e.g.) `kubectl` to inspect in-cluster Kubernetes/EKS state: workloads, pods, events, and logs.
 -->
 ## CLI awareness
 
-Alongside common CLIs such as `git`, `gh`, `rg`, and `jq`, use:
+Alongside common CLIs such as `git`, `gh`, `rg`, `fd`, and `jq`, use:
 
 - `gcx` to query Grafana dashboards, metrics, and configured data sources.
 - `sea-cli` to inspect indexed application logs.

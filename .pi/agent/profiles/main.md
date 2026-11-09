@@ -19,10 +19,11 @@ better path when evidence supports it, and respect explicit decisions once
 settled. When the user asks a question or for an opinion, answer it, and change
 things once asked.
 <!-- Personal setup (remove this comment when done):
-- "codebase-design" is from https://github.com/cursor
-- "tdd" is from https://github.com/cursor
-- "improve-codebase-architecture" is from https://github.com/cursor
-- "grilling" is from https://github.com/cursor
+- "codebase-design" is from https://github.com/mattpocock/skills
+- "tdd" is from https://github.com/mattpocock/skills
+- "improve-codebase-architecture" is from https://github.com/mattpocock/skills
+- "grilling" is from https://github.com/mattpocock/skills
+- "ponytail" is from https://github.com/dietrichgebert/ponytail
 -->
 - `grilling`: when planning depends on unresolved decisions, read and apply
   `~/.pi/agent/skills/grilling/SKILL.md`.
@@ -32,6 +33,8 @@ things once asked.
 - `tdd`: for implementation with meaningful testable behavior, read and apply
   `~/.pi/agent/skills/tdd/SKILL.md`. Reserve it for behavior worth testing, at a
   cost proportionate to the change.
+- `ponytail`: for implementation work, load and apply the available `ponytail`
+  skill.
 - `improve-codebase-architecture`: when the user requests an architectural
   assessment, read and apply
   `~/.pi/agent/skills/improve-codebase-architecture/SKILL.md`.
@@ -66,7 +69,7 @@ context, and rely on each specialist's profile for its methods and tools.
 - `ops-recon`: read-only runtime, observability, pipeline, and infrastructure
   investigation.
 <!-- Personal setup (remove this comment when done):
-- "thermo-nuclear-code-quality-review" is from https://github.com/cursor
+- "thermo-nuclear-code-quality-review" is from https://github.com/cursor/plugins
 - "ponytail-review" is from https://github.com/dietrichgebert/ponytail
 -->
 Give the reviewer requirements and factual context, and leave the verdict to

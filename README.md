@@ -28,12 +28,19 @@ The repository mirrors the relevant paths under `$HOME`:
 ```text
 .
 ├── .config/
-│   └── herdr/
-│       ├── config.toml
-│       └── plugins/
-│           └── pi-team/
-│               ├── herdr-plugin.toml
-│               └── setup.sh
+│   ├── herdr/
+│   │   ├── config.toml
+│   │   └── plugins/
+│   │       └── pi-team/
+│   │           ├── herdr-plugin.toml
+│   │           └── setup.sh
+│   └── opencode/
+│       ├── opencode.json
+│       ├── agents/
+│       ├── commands/
+│       ├── plugins/
+│       │   └── profiles/
+│       └── profiles/
 └── .pi/
     └── agent/
         ├── extensions/
@@ -48,19 +55,22 @@ The repository mirrors the relevant paths under `$HOME`:
 You need:
 
 - [Pi](https://pi.dev)
+- [OpenCode](https://opencode.ai) v2, for the [OpenCode variant](#opencode-variant)
 - [Herdr](https://herdr.dev) `>= 0.9.1`
-- Bash
-- [`jq`](https://jqlang.github.io/jq/)
-- Herdr's managed Pi integration
+- Bash and zsh (run the Pi team action)
+- [`jq`](https://jqlang.github.io/jq/) (parses Herdr's JSON output in the action)
+- Herdr's managed Pi and OpenCode integrations
 
-Install the integration with:
+Install the integrations with:
 
 ```sh
 herdr integration install pi
+herdr integration install opencode
 ```
 
-It generates and maintains `~/.pi/agent/extensions/herdr-agent-state.ts`. That
-file is intentionally not committed here and should not be copied by hand.
+They generate and maintain their own files under `~/.pi/agent/extensions` and
+`~/.config/opencode`. Those files are intentionally not committed here and
+should not be copied by hand.
 
 After copying the plugin to `~/.config/herdr/plugins/pi-team`, register it with:
 
@@ -110,16 +120,22 @@ Alternatively, install the packages individually:
 pi install git:github.com/DietrichGebert/ponytail
 pi install npm:pi-web-access
 pi install npm:@sting8k/pi-vcc
-pi install npm:@earendil-works/pi-voice
 ```
 
 They provide, respectively, a persistent bias toward simpler code, web access,
-algorithmic conversation compaction with lossless recall, and local voice
-transcription. Remove any package you do not want. Pi Voice's microphone and
-local model configuration is machine-specific and is not included here.
+and algorithmic conversation compaction with lossless recall. Remove any
+package you do not want.
 
-pi-vcc creates its own configuration with safe defaults. This repository does
-not commit a redundant `pi-vcc-config.json`.
+I currently run Ponytail with its always-on ruleset turned off, exporting this
+from `~/.zshrc`:
+
+```sh
+export PONYTAIL_DEFAULT_MODE=off
+```
+
+Its skills, such as `ponytail` and `ponytail-review`, stay available: the Main
+and Reviewer profiles load them when needed, and `/ponytail` turns the mode on
+for a session.
 
 In my setup, models are routed through a self-hosted LiteLLM proxy. This
 centralizes model discovery and routing, authentication and SSO, and usage and
@@ -133,37 +149,44 @@ To use the same provider extension, install it with:
 pi install npm:pi-provider-litellm
 ```
 
-Then authenticate interactively:
-
-```text
-/login litellm
-```
-
-Or configure its URL and credentials through the environment as documented by
-the extension. Merge and customize this valid settings fragment:
+Configure its URL and credentials through the environment as documented by the
+extension. Merge and customize this valid settings fragment:
 
 ```json
 {
   "defaultProvider": "litellm",
   "defaultModel": "<model-id-exposed-by-your-proxy>",
   "litellm": {
+    "skills": {
+      "enabled": false
+    },
     "mcp": {
+      "enabled": false
+    },
+    "budget": {
       "enabled": false
     }
   }
 }
 ```
 
+The extension enables LiteLLM's Skills Gateway, its MCP server, and a budget
+footer by default. This fragment turns all three off: skills come from
+`.pi/agent/skills`, MCP servers are configured per agent, and the footer
+extension already shows cost.
+
 All local skills in `.pi/agent/skills` use `disable-model-invocation: true`, so
 they do not advertise themselves to the model. The Main and Reviewer profiles
 provide explicit paths for the skills they must
 load, and a user can invoke one directly with `/skill:<name>`.
 
-The Pi setup also includes two source extensions under `.pi/agent/extensions`:
+The Pi setup also includes three source extensions under `.pi/agent/extensions`:
 
 - `custom-footer.ts` shows path, branch, cost, context usage, model, and thinking
-  level
+  level on one line
 - `custom-tool-output.ts` keeps tool output compact until expanded
+- `questions-tool.ts` adds a questionnaire tool, so the agent can ask the user
+  one or more questions
 
 They use Pi's extension APIs and may require adjustment after future Pi updates.
 Review executable extensions before loading them.
@@ -188,7 +211,7 @@ comments. Remove comments and instructions that do not belong in your setup.
 
 The Documenter profile uses Jira and Confluence through Atlassian MCP. Nothing
 in this repository installs or authenticates that integration. If you want the
-same backend, create `~/.pi/agent/mcp.json` with:
+same backend in Pi, create `~/.pi/agent/mcp.json` with:
 
 ```json
 {
@@ -207,6 +230,24 @@ Then validate and authenticate it:
 pi mcp list
 pi mcp login atlassian
 ```
+
+For the OpenCode variant, add the same server to `mcp.servers` in
+`~/.config/opencode/opencode.json`:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "atlassian": {
+        "type": "remote",
+        "url": "https://mcp.atlassian.com/v1/mcp"
+      }
+    }
+  }
+}
+```
+
+Then authenticate it with `opencode mcp auth atlassian`.
 
 Replace the Documenter profile if you use another issue tracker, knowledge base,
 or integration. Never commit `mcp-auth.json`.
@@ -228,8 +269,73 @@ extensions, packages, and host tools you want:
 2. invoke the configured Pi team action
 3. verify that each pane starts with the intended role, model, and working directory
 
-The action refuses to run with missing model entries, missing profiles, or an
-existing multi-pane layout.
+The action refuses to run outside a Herdr pane, without `jq` or `zsh`, without
+exactly five models, or with a missing profile. If the tab you launch it from is a single idle shell, it builds
+the team there; otherwise it opens a new "Pi Team" tab. A second run in the same
+workspace while one is starting is ignored.
+
+## OpenCode variant
+
+`.config/opencode` adapts the same roles to [OpenCode](https://opencode.ai) v2.
+It is a different shape of team: one primary agent delegates to subagents in
+child sessions, instead of five peers in visible panes.
+
+- `profiles/main.md` is the Main profile for OpenCode. Its Specialists section
+  delegates through the `subagent` tool instead of Herdr.
+- `agents/` holds the four subagents. They replace OpenCode's base prompt, so
+  each one states its own identity, works only from the delegated task, and
+  returns a fixed report to the primary agent.
+- `devops` is the OpenCode counterpart of `ops-recon`, and unlike it, it can
+  operate: it makes explicitly requested changes, such as a Grafana dashboard
+  or an Azure DevOps variable group, capturing the previous state first.
+- `plugins/profiles` appends a profile to the system prompt of its primary
+  agent inside `<addendum>`, like `pi --append-system-prompt`. A Markdown agent
+  would replace OpenCode's base prompt instead.
+- `commands/` gives each skill its `/` command. The skills themselves are read
+  from `~/.pi/agent/skills`, so both hosts share one copy.
+
+`opencode.json` starts in OpenCode's `build` agent for quick work and disables
+`plan`. Switch to `main` with Shift+Tab for the full workflow. Each subagent
+and Main need a model: replace the commented `model` lines with IDs from
+`opencode models`, and set a top-level `model` for `build`.
+
+As with Pi, route models through your provider of choice. With the same
+LiteLLM proxy, add the
+[`opencode-plugin-litellm`](https://github.com/yuseferi/opencode-litellm)
+provider settings to `opencode.json` and give the background service its key:
+
+```json
+{
+  "providers": {
+    "litellm": {
+      "name": "LiteLLM",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "<your-litellm-url>/v1",
+        "apiKey": "{env:LITELLM_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+OpenCode runs its plugins in a background service that takes its environment
+once, when it starts. After exporting a variable in your shell profile, such as
+`LITELLM_API_KEY` or `PONYTAIL_DEFAULT_MODE`, restart the service from a new
+shell:
+
+```sh
+opencode service restart
+```
+
+To keep a variable whatever starts the service, set it on the service itself
+with `opencode service set env <NAME> <value>`.
+
+## Also in my setup
+
+- [Hex](https://anoma.ly/hex): on-device voice dictation for any app.
+- [Browse](https://opencode.ai/product/browse): an MCP server that lets agents
+  use your real browser, with your tabs and logins.
 
 ## Stay in touch
 
