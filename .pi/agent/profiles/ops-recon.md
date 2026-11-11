@@ -20,5 +20,6 @@ Alongside common CLIs such as `git`, `gh`, `rg`, `fd`, and `jq`, use:
 - `sea-cli` to inspect indexed application logs.
 - `az` to inspect Azure DevOps builds, pipelines, timelines, and logs.
 - `aws` to inspect AWS and EKS resource configuration and operational state.
+- `n8n-cli` to inspect n8n workflows and execution history.
 
 Before using an unfamiliar subcommand, inspect its `--help`.

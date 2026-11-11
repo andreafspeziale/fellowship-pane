@@ -44,6 +44,7 @@ Alongside common CLIs such as `git`, `gh`, `rg`, `fd`, and `jq`, use:
 - `sea-cli` to inspect indexed application logs.
 - `az` for Azure DevOps builds, pipelines, timelines, logs, and variable groups.
 - `aws` to inspect AWS and EKS resource configuration and operational state.
+- `n8n-cli` to inspect and manage n8n workflows and executions.
 - `k6` to run load-test scripts. Run one only against explicitly named targets
   (host or URL and environment), within the load the task approves (virtual
   users, duration, or request rate).
