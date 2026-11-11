@@ -1,14 +1,12 @@
 {
   "theme": "mellow",
-  "defaultThinkingLevel": "high",
   "codemode": {
     "inlineBudget": 0
   },
   "packages": [
     "git:github.com/DietrichGebert/ponytail",
     "npm:pi-web-access",
-    "npm:@sting8k/pi-vcc",
-    "npm:@earendil-works/pi-voice"
+    "npm:@sting8k/pi-vcc"
   ],
   "showCacheMissNotices": true,
   "fullscreenScrollbar": "hidden"
